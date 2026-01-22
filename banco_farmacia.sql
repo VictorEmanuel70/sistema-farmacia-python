@@ -1,11 +1,7 @@
--- Script SQL corrigido para usar com o seu código Python
--- Copie e cole no MySQL Workbench e execute (certifique-se do servidor ligado)
-
 DROP DATABASE IF EXISTS `farmaciapaguepouco`;
 CREATE DATABASE `farmaciapaguepouco` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `farmaciapaguepouco`;
 
--- Tabela Farmaceutico
 CREATE TABLE IF NOT EXISTS `Farmaceutico` (
   `idFarmaceutico` INT NOT NULL AUTO_INCREMENT,
   `Nome` VARCHAR(100) NOT NULL,
@@ -16,7 +12,6 @@ CREATE TABLE IF NOT EXISTS `Farmaceutico` (
   UNIQUE KEY `CPF_UNIQUE` (`CPF`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Tabela Cliente
 CREATE TABLE IF NOT EXISTS `Cliente` (
   `idCliente` INT NOT NULL AUTO_INCREMENT,
   `Nome` VARCHAR(100) NOT NULL,
@@ -28,7 +23,6 @@ CREATE TABLE IF NOT EXISTS `Cliente` (
   UNIQUE KEY `CPF_UNIQUE` (`CPF`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Tabela Produtos
 CREATE TABLE IF NOT EXISTS `Produtos` (
   `idProdutos` INT NOT NULL AUTO_INCREMENT,
   `Nome` VARCHAR(100) NOT NULL,
@@ -40,11 +34,10 @@ CREATE TABLE IF NOT EXISTS `Produtos` (
   PRIMARY KEY (`idProdutos`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Tabela Vendas
 CREATE TABLE IF NOT EXISTS `Vendas` (
   `idVendas` INT NOT NULL AUTO_INCREMENT,
   `DataVenda` DATE NOT NULL,
-  `Preco` DECIMAL(10,2) NOT NULL, -- seu código usa "Preco" como total
+  `Preco` DECIMAL(10,2) NOT NULL,
   `Farmaceutico_idFarmaceutico` INT NOT NULL,
   `Cliente_idCliente` INT NOT NULL,
   PRIMARY KEY (`idVendas`),
@@ -54,7 +47,6 @@ CREATE TABLE IF NOT EXISTS `Vendas` (
   CONSTRAINT `fk_vendas_cli`  FOREIGN KEY (`Cliente_idCliente`) REFERENCES `Cliente`(`idCliente`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Tabela de relação Vendas_has_Produtos
 CREATE TABLE IF NOT EXISTS `Vendas_has_Produtos` (
   `Vendas_idVendas` INT NOT NULL,
   `Vendas_Farmaceutico_idFarmaceutico` INT NOT NULL,
@@ -65,10 +57,8 @@ CREATE TABLE IF NOT EXISTS `Vendas_has_Produtos` (
   INDEX `idx_vhp_prod` (`Produtos_idProdutos`),
   CONSTRAINT `fk_vhp_vendas` FOREIGN KEY (`Vendas_idVendas`) REFERENCES `Vendas`(`idVendas`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_vhp_prod`  FOREIGN KEY (`Produtos_idProdutos`) REFERENCES `Produtos`(`idProdutos`) ON DELETE RESTRICT ON UPDATE CASCADE
-  -- NOTE: Vendas_Farmaceutico_idFarmaceutico e Vendas_Cliente_idCliente ficam como colunas para compatibilidade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dados iniciais (amostras)
 INSERT INTO `Produtos` (Nome, Composto, DataValidade, QuantidadeEstoque, ValorCompra, ValorVenda) VALUES
 ('Aspirina','Ácido Acetilsalicílico','2025-08-10',500,5.00,10.00),
 ('Paracetamol','Paracetamol','2024-12-15',300,7.50,15.00),
@@ -84,12 +74,10 @@ INSERT INTO `Farmaceutico` (Nome, CPF, DataNasc, Telefone) VALUES
 ('João da Silva','12345671901','1985-06-15','21987654321'),
 ('Maria Oliveira','83456789012','1990-07-20','21876543210');
 
--- Exemplo de vendas já registradas (opcional)
 INSERT INTO `Vendas` (DataVenda, Preco, Farmaceutico_idFarmaceutico, Cliente_idCliente) VALUES
 ('2024-08-01',50.00,1,1),
 ('2024-08-02',75.00,2,2);
 
--- Exemplo de relação venda-produto (opcional)
 INSERT INTO `Vendas_has_Produtos` (Vendas_idVendas, Vendas_Farmaceutico_idFarmaceutico, Vendas_Cliente_idCliente, Produtos_idProdutos, QuantidadeProduto) VALUES
 (1,1,1,1,2),
 (2,2,2,2,3);
