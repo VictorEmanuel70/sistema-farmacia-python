@@ -182,19 +182,16 @@ def Venda():
         cursor.close()
         return
 
-    # calcula total e atualiza estoque
     valortotal = valorvenda * quantidade
     novoestoque = quantidadeestoque - quantidade
 
     cursor.execute("UPDATE Produtos SET QuantidadeEstoque = %s WHERE idProdutos = %s", (novoestoque, idproduto))
-    # inserção na tabela Vendas: seu schema tem a coluna 'Preco' (não 'ValorTotal'), então usamos PRECO
     cursor.execute(
         "INSERT INTO Vendas (Preco, DataVenda, Farmaceutico_idFarmaceutico, Cliente_idCliente) VALUES (%s, %s, %s, %s)",
         (valortotal, datavenda, idfarmaceutico, idcliente)
     )
 
-    idvenda = cursor.lastrowid  # idVendas gerado
-    # insere na tabela de itens; seu schema original chama Vendas_has_Produtos e espera (Vendas_idVendas, Vendas_Farmaceutico_idFarmaceutico, Vendas_Cliente_idCliente, Produtos_idProdutos, QuantidadeProduto)
+    idvenda = cursor.lastrowid  
     cursor.execute(
         "INSERT INTO Vendas_has_Produtos (Vendas_idVendas, Vendas_Farmaceutico_idFarmaceutico, Vendas_Cliente_idCliente, Produtos_idProdutos, QuantidadeProduto) VALUES (%s, %s, %s, %s, %s)",
         (idvenda, idfarmaceutico, idcliente, idproduto, quantidade)
@@ -271,3 +268,4 @@ if __name__ == "__main__":
         menu()
     finally:
         connection.close()
+
