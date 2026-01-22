@@ -30,7 +30,7 @@ O objetivo é criar um sistema de gerenciamento para uma farmácia, utilizando P
 
 1. **Clone o repositório**:
    ```bash
-   git clone https://github.com/SEU-USUARIO/farmacia-pague-pouco.git
+   git clone https://github.com/SEU-USUARIO/sistema-farmacia-python.git
    ```
 
 2. **Configure o banco de dados**:
